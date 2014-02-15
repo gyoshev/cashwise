@@ -1,0 +1,8 @@
+{
+  "name": "cashwise",
+  "private": true,
+  "dependencies": {
+    "kendo-ui": "~2013.3.1119"
+  },
+  "devDependencies": {}
+}
