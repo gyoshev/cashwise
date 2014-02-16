@@ -1,19 +1,51 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title></title>
-  
-  
-  <link rel="stylesheet" type="text/css" href="bower_components/kendo-ui/styles/kendo.common.min.css">
-  <link rel="stylesheet" type="text/css" href="bower_components/kendo-ui/styles/kendo.default.min.css">
+  <meta charset="utf-8">
+  <title>Cashwise</title>
+
+  <link href="http://cdn.kendostatic.com/2013.3.1324/styles/kendo.mobile.all.min.css" rel="stylesheet" />
 </head>
 <body>
+  <div data-role="view" data-layout="main-layout" id="purchase-category" data-title="Select Purchase Type">
+      <ul data-role="listview" data-style="inset">
+          <li>Groceries</li>
+          <li>Eating out</li>
+          <li>Travel</li>
+          <li>Other</li>
+      </ul>
+  </div>
 
-  <h2>You've got Kendo UI!</h2>
+  <div data-role="view" data-layout="main-layout" id="purchase-details" data-title="Enter Purchase Details">
+      <ul data-role="listview" data-style="inset">
+          <li>Groceries</li>
+          <li>Eating out</li>
+          <li>Travel</li>
+          <li>Other</li>
+      </ul>
+  </div>
 
-  <script src="bower_components/jquery/jquery.min.js"></script>
-  <script src="bower_components/kendo-ui/js/kendo.web.min.js"></script>
 
+  <div data-role="layout" data-id="main-layout">
+      <header data-role="header">
+          <div data-role="navbar">
+              <!--a class="nav-button" data-align="left" data-role="backbutton">Back</a-->
+              <span data-role="view-title">My Contacts</span>
+          </div>
+      </header>
+
+      <footer data-role="footer">
+          <div data-role="tabstrip">
+              <a data-icon="globe" href="#purchase-category">Log purchase</a><!--
+              --><a data-icon="organize" href="#overview-gallery">History</a>
+          </div>
+      </footer>
+  </div>
+
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src="http://cdn.kendostatic.com/2013.3.1324/js/kendo.mobile.min.js"></script>
+  <script>
+      var app = new kendo.mobile.Application(document.body);
+  </script>
 </body>
 </html>
