@@ -4,46 +4,77 @@
   <meta charset="utf-8">
   <title>Cashwise</title>
 
-  <link href="http://cdn.kendostatic.com/2013.3.1324/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="http://cdn.kendostatic.com/2013.3.1324/styles/kendo.mobile.all.min.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div data-role="view" data-layout="main-layout" id="purchase-category" data-title="Select Purchase Type">
-      <ul data-role="listview" data-style="inset">
-          <li>Groceries</li>
-          <li>Eating out</li>
-          <li>Travel</li>
-          <li>Other</li>
-      </ul>
+  <div id="purchase-category"
+       data-role="view" data-layout="main-layout"
+       data-title="Log a purchase">
+      <ul data-role="listview"
+          data-style="inset"
+          data-template="purchase-category-item"
+          data-source="cashwise.categories"></ul>
   </div>
 
-  <div data-role="view" data-layout="main-layout" id="purchase-details" data-title="Enter Purchase Details">
-      <ul data-role="listview" data-style="inset">
-          <li>Groceries</li>
-          <li>Eating out</li>
-          <li>Travel</li>
-          <li>Other</li>
-      </ul>
+  <script type="text/x-kendo-template" id="purchase-category-item">
+    <a data-role="button" data-rel="modalview" href="\#purchase-details" data-click="cashwise.setCategory">#: data #</a>
+  </script>
+
+  <div id="purchase-details" data-role="modalview">
+      <div data-role="header">
+        <div data-role="navbar">
+           <span>Purchase details</span>
+           <a data-role="button" data-align="right" data-click="cashwise.closeModal">Cancel</a>
+        </div>
+      </div>
+
+      <div id="purchase-form">
+          <label>
+            What did you purchase?
+            <input type="text" data-bind="value:name">
+          </label>
+          <label>
+            What did it cost?
+            <input type="number" data-bind="value:price">
+          </label>
+      </div>
+
+      <a data-role="button" data-click="cashwise.logCurrentPurchase">Save</a>
   </div>
 
+  <div id="purchase-history"
+       data-role="view" data-layout="main-layout"
+       data-title="Purchase history"
+       data-init="cashwise.initHistory">
+      <ul data-role="listview" data-template="purchase-history-item" data-style="inset"></ul>
+  </div>
+
+  <script type="text/x-kendo-template" id="purchase-history-item">
+    <div class="item">
+      <span class="name">#: name #</span>
+      <span class="price">#: kendo.toString(price, "c") #</span>
+    </div>
+  </script>
 
   <div data-role="layout" data-id="main-layout">
       <header data-role="header">
           <div data-role="navbar">
-              <!--a class="nav-button" data-align="left" data-role="backbutton">Back</a-->
-              <span data-role="view-title">My Contacts</span>
+              <span data-role="view-title">Cashwise</span>
           </div>
       </header>
 
       <footer data-role="footer">
           <div data-role="tabstrip">
               <a data-icon="globe" href="#purchase-category">Log purchase</a><!--
-              --><a data-icon="organize" href="#overview-gallery">History</a>
+              --><a data-icon="organize" href="#purchase-history">History</a>
           </div>
       </footer>
   </div>
 
   <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
   <script src="http://cdn.kendostatic.com/2013.3.1324/js/kendo.mobile.min.js"></script>
+  <script src="model.js"></script>
   <script>
       var app = new kendo.mobile.Application(document.body);
   </script>
