@@ -1,17 +1,5 @@
 var cashwise = (function() {
-    var localDataSource = new kendo.data.DataSource({
-        data: [
-            { name: "Candy!", price: 1.95 },
-            { name: "Wine", price: 11.95 },
-            { name: "Lunch", price: 10.35 },
-            { name: "Lunch", price: 10.95 },
-            { name: "Candy!", price: 1.95 },
-            { name: "Wine", price: 11.95 },
-            { name: "Candy!", price: 1.95 },
-            { name: "Wine", price: 11 },
-            { name: "Lunch", price: 10.95 }
-        ]
-    });
+    var localDataSource = new kendo.data.DataSource();
 
     localDataSource.read();
 
