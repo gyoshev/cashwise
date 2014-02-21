@@ -65,8 +65,8 @@ var cashwise = (function() {
             "Clothing", "Bills", "Car", "Health", "Other"
         ],
         currentPurchase: kendo.observable({
-            name: "foo",
-            price: 123,
+            name: "",
+            price: 0,
             category: ""
         }),
         setCategory: function(e) {

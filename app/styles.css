@@ -11,3 +11,30 @@
     background-color: #bd2729;
     color: #fff;
 }
+
+.km-modalview-wrapper {
+    margin: 0 5%;
+}
+
+#purchase-form label {
+    width: 90%;
+    display: block;
+    margin: 0 5%;
+    padding: .5rem 0;
+}
+
+#purchase-form input {
+    width: 100%;
+    margin-top: .5rem;
+    font-size: 1.4rem;
+}
+
+.button-wrap {
+    margin: .5rem;
+    overflow: hidden;
+}
+
+.button-wrap [data-role=button] {
+    width: 47%;
+    text-align: center;
+}

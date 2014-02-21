@@ -25,7 +25,6 @@
       <div data-role="header">
         <div data-role="navbar">
            <span>Purchase details</span>
-           <a data-role="button" data-align="right" data-click="cashwise.closeModal">Cancel</a>
         </div>
       </div>
 
@@ -40,7 +39,10 @@
           </label>
       </div>
 
-      <a data-role="button" data-click="cashwise.logCurrentPurchase">Save</a>
+      <div class="button-wrap">
+        <a data-role="button" data-align="left" data-click="cashwise.closeModal">Close</a>
+        <a data-role="button" data-align="right" data-click="cashwise.logCurrentPurchase">Save</a>
+      </div>
   </div>
 
   <div id="purchase-history"
