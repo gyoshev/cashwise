@@ -1,6 +1,10 @@
 {
   "name": "cashwise",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gyoshev/cashwise"
+  },
   "dependencies": {
     "express": "~3.4.8",
     "appcache-node": "~0.2.0"
@@ -17,6 +21,9 @@
     "jshint-stylish": "~0.1.3"
   },
   "engines": {
-    "node": ">=0.8.0"
+    "node": "0.10.x"
+  },
+  "scripts": {
+    "start": "web.js"
   }
 }
