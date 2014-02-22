@@ -1,5 +1,59 @@
 var cashwise = (function() {
-    var localDataSource = new kendo.data.DataSource();
+
+    function getPurchaseId(done) {
+        localforage.getItem("purchaseId", function(purchaseId) {
+            purchaseId = purchaseId || 0;
+            purchaseId++;
+            localforage.setItem("purchaseId", purchaseId, function() {
+                done(purchaseId);
+            });
+        });
+    }
+
+    var localDataSource = new kendo.data.DataSource({
+        // sync with offline storage on every interaction
+        autoSync: true,
+
+        // declare how to persist to offline storage
+        transport: {
+            create: function(options) {
+                var item = options.data;
+                localforage.getItem("items", function(items) {
+                    items = items || [];
+                    getPurchaseId(function(purchaseId) {
+                        item.id = purchaseId;
+                        localforage.setItem("items", items.concat([item]), function() {
+                            options.success([ item ]);
+                        });
+                    });
+                });
+            },
+            read: function(options) {
+                localforage.getItem("items", function(items) {
+                    options.success(items || []);
+                });
+            },
+            destroy: function(options) {
+                var item = options.data;
+                localforage.getItem("items", function(items) {
+                    items = $.grep(items, function(x) { return x.id != item.id });
+
+                    localforage.setItem("items", items, options.success);
+                });
+            }
+        },
+
+        // schema of the items that we are persisting
+        schema: {
+            model: {
+                id: "id",
+                fields: {
+                    name: { type: "string" },
+                    price: { type: "number" }
+                }
+            }
+        }
+    });
 
     localDataSource.read();
 
