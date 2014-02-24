@@ -31,11 +31,11 @@
       <div id="purchase-form">
           <label>
             What did you purchase?
-            <input type="text" data-bind="value:name">
+            <input type="text" data-bind="value:Name">
           </label>
           <label>
             What did it cost?
-            <input type="number" data-bind="value:price">
+            <input type="number" data-bind="value:Price">
           </label>
       </div>
 
@@ -61,8 +61,8 @@
 
   <script type="text/x-kendo-template" id="purchase-history-item">
     <div class="item">
-      <span class="name">#: name #</span>
-      <span class="price">#: kendo.toString(price, "c") #</span>
+      <span class="name">#: Name #</span>
+      <span class="price">#: kendo.toString(Price, "c") #</span>
       <a href="\\#" data-role="button" class="delete">Delete</a>
     </div>
   </script>
@@ -84,9 +84,13 @@
 
   <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
   <script src="http://cdn.kendostatic.com/2013.3.1324/js/kendo.mobile.min.js"></script>
+  <script src="http://demos.telerik.com/kendo-ui/content/shared/js/everlive.all.js"></script>
+  <script src="http://cdn.kendostatic.com/2013.3.1324/js/cultures/kendo.culture.nl-NL.min.js"></script>
   <script src="localforage.min.js"></script>
   <script src="model.js"></script>
   <script>
+      kendo.culture("nl-NL");
+
       var app = new kendo.mobile.Application(document.body);
 
       (function() {

@@ -1,14 +1,17 @@
 var cashwise = (function() {
 
-    function getPurchaseId(done) {
-        localforage.getItem("purchaseId", function(purchaseId) {
-            purchaseId = purchaseId || 0;
-            purchaseId++;
-            localforage.setItem("purchaseId", purchaseId, function() {
-                done(purchaseId);
-            });
-        });
-    }
+    // schema of the items that we are persisting
+    // used in both the local and remote datasource
+    var schema = {
+        model: {
+            id: Everlive.idField,
+            fields: {
+                Name: { type: "string" },
+                Price: { type: "number" },
+                PurchasedAt: { type: "date" }
+            }
+        }
+    };
 
     var localDataSource = new kendo.data.DataSource({
         // sync with offline storage on every interaction
@@ -20,11 +23,9 @@ var cashwise = (function() {
                 var item = options.data;
                 localforage.getItem("items", function(items) {
                     items = items || [];
-                    getPurchaseId(function(purchaseId) {
-                        item.id = purchaseId;
-                        localforage.setItem("items", items.concat([item]), function() {
-                            options.success([ item ]);
-                        });
+                    item.Id = kendo.guid();
+                    localforage.setItem("items", items.concat([item]), function() {
+                        options.success([ item ]);
                     });
                 });
             },
@@ -36,26 +37,31 @@ var cashwise = (function() {
             destroy: function(options) {
                 var item = options.data;
                 localforage.getItem("items", function(items) {
-                    items = $.grep(items, function(x) { return x.id != item.id });
+                    items = $.grep(items, function(x) { return x.Id != item.Id });
 
                     localforage.setItem("items", items, options.success);
                 });
             }
         },
 
-        // schema of the items that we are persisting
-        schema: {
-            model: {
-                id: "id",
-                fields: {
-                    name: { type: "string" },
-                    price: { type: "number" }
-                }
-            }
-        }
+        sort: { field: "PurchasedAt", dir: "desc" },
+
+        schema: schema
     });
 
-    localDataSource.read();
+    var everlive = new Everlive("amhxJqN53yuAhdST");
+    var remoteDataSource = new kendo.data.DataSource({
+        type: "everlive",
+
+        transport: {
+            typeName: "Purchase"
+        },
+
+        schema: schema,
+
+        serverSorting: true,
+        sort: { field: "PurchasedAt", dir: "desc" }
+    });
 
     function touchstart(e) {
         var target = $(e.touch.initialTouch),
@@ -113,17 +119,33 @@ var cashwise = (function() {
             PurchasedAt: new Date()
         },
         setCategory: function(e) {
-            cashwise.currentPurchase.set("category", e.button.text());
+            cashwise.currentPurchase.set("Category", e.button.text());
             kendo.bind($("#purchase-form"), cashwise.currentPurchase);
         },
         logCurrentPurchase: function(e) {
             var purchase = cashwise.currentPurchase;
-            localDataSource.add($.extend({}, purchase));
 
-            purchase.set("name", "");
-            purchase.set("price", 0);
+            purchase.set("PurchasedAt", new Date());
+
+            purchase = $.extend({}, purchase);
+
+            localDataSource.add(purchase);
+
+            purchase.set("Name", "");
+            purchase.set("Price", 0);
 
             cashwise.closeModal();
+        },
+        sync: function() {
+            remoteDataSource.fetch();
+            localDataSource.fetch();
+
+            var localData = localDataSource.data();
+            var remoteData = remoteDataSource.data();
+
+            // TODO: add missing entries in both dataSources
+
+            remoteDataSource.sync();
         },
         online: window.navigator.onLine,
         onlineClass: function() {
