@@ -1,0 +1,16 @@
+CACHE MANIFEST
+
+CACHE:
+http://code.jquery.com/jquery-1.9.1.min.js
+http://cdn.kendostatic.com/2013.3.1324/js/kendo.mobile.min.js
+http://cdn.kendostatic.com/2013.3.1324/styles/kendo.mobile.all.min.css
+http://cdn.kendostatic.com/2013.3.1324/styles/images/kendoui.woff
+http://demos.telerik.com/kendo-ui/content/shared/js/everlive.all.js
+http://demos.telerik.com/kendo-ui/content/web/globalization/cultures/kendo.culture.bg-BG.js
+localforage.min.js
+model.js
+styles.css
+
+NETWORK:
+*
+

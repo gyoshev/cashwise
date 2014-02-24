@@ -12,21 +12,19 @@
     app.use(express.errorHandler());
   });
 
-  // cache manifest
-  var c = require('appcache-node');
-  var cf = c.newCache([
-    "http://code.jquery.com/jquery-1.9.1.min.js",
-    "http://cdn.kendostatic.com/2013.3.1324/js/kendo.mobile.min.js",
-    "http://cdn.kendostatic.com/2013.3.1324/styles/kendo.mobile.all.min.css",
-    "http://cdn.kendostatic.com/2013.3.1324/styles/images/kendoui.woff",
-    "localforage.min.js",
-    "model.js",
-    "styles.css"
-  ]);
+  var manifest;
+
+  var fs = require('fs');
+  fs.readFile('manifest.txt', 'utf8', function (err,data) {
+    if (err) {
+      return console.log(err);
+    }
+    manifest = data + "\r\n# " + new Date();
+  });
 
   app.get("/app.cache", function(req, res) {
     res.set('Content-Type', 'text/cache-manifest');
-    res.send(200, cf);
+    res.send(200, manifest);
   });
 
   http.createServer(app).listen(app.get('port'), function(){

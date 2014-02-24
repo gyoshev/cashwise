@@ -6,8 +6,7 @@
     "url": "https://github.com/gyoshev/cashwise"
   },
   "dependencies": {
-    "express": "~3.4.8",
-    "appcache-node": "~0.2.0"
+    "express": "~3.4.8"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
