@@ -83,7 +83,7 @@ var cashwise = (function() {
         button.expand().duration(200).play();
     };
 
-    return {
+    return kendo.observable({
         initHistory: function(e) {
             var content = this.content;
 
@@ -106,11 +106,12 @@ var cashwise = (function() {
             "Cabs", "Cosmetics", "Games", "Household", "C2H5OH",
             "Clothing", "Bills", "Car", "Health", "Other"
         ],
-        currentPurchase: kendo.observable({
-            name: "",
-            price: 0,
-            category: ""
-        }),
+        currentPurchase: {
+            Name: "",
+            Price: 0,
+            Category: "",
+            PurchasedAt: new Date()
+        },
         setCategory: function(e) {
             cashwise.currentPurchase.set("category", e.button.text());
             kendo.bind($("#purchase-form"), cashwise.currentPurchase);
@@ -123,6 +124,17 @@ var cashwise = (function() {
             purchase.set("price", 0);
 
             cashwise.closeModal();
+        },
+        online: window.navigator.onLine,
+        onlineClass: function() {
+            return this.online ? "online": "offline";
+        },
+        connectionStatusChange: function() {
+            this.set("online", window.navigator.onLine);
+
+            if (this.online) {
+                this.sync();
+            }
         }
-    };
+    });
 })();
