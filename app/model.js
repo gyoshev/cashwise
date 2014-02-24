@@ -8,7 +8,8 @@ var cashwise = (function() {
             fields: {
                 Name: { type: "string" },
                 Price: { type: "number" },
-                PurchasedAt: { type: "date" }
+                PurchasedAt: { type: "date" },
+                Category: { type: "string" }
             }
         }
     };
@@ -127,7 +128,7 @@ var cashwise = (function() {
 
             purchase.set("PurchasedAt", new Date());
 
-            purchase = $.extend({}, purchase);
+            purchase = $.extend({ offline: true }, purchase);
 
             localDataSource.add(purchase);
 
@@ -136,16 +137,68 @@ var cashwise = (function() {
 
             cashwise.closeModal();
         },
+        facebookLogin: function(callback) {
+            $.ajaxSetup({ cache: true });
+            $.getScript('//connect.facebook.net/nl_NL/all.js', function() {
+                FB.init({ appId: '255069818005059' });
+                FB.getLoginStatus(function(response) {
+                    if (response.status == "connected") {
+                        callback(response.authResponse.accessToken);
+                    } else {
+                        FB.login(function(response) {
+                            if (response.status == "connected") {
+                                callback(response.authResponse.accessToken);
+                            }
+                        });
+                    }
+                }, { scope: "email" });
+            });
+        },
         sync: function() {
-            remoteDataSource.fetch();
-            localDataSource.fetch();
+            cashwise.facebookLogin(function(authToken) {
+                everlive.Users.loginWithFacebook(
+                    authToken,
+                    function() {
+                        remoteDataSource.fetch(function() {
+                            var pushed = false;
+                            var localData = localDataSource.data().toJSON();
 
-            var localData = localDataSource.data();
-            var remoteData = remoteDataSource.data();
+                            for (var i = 0; i < localData.length; i++) {
+                                var item = localData[i];
 
-            // TODO: add missing entries in both dataSources
+                                // unsynced item, remove pseudo-id and push to remote
+                                if (item.offline) {
+                                    pushed = true;
+                                    delete item.Id;
+                                    remoteDataSource.add(item);
+                                }
+                            }
 
-            remoteDataSource.sync();
+                            function purgeLocal() {
+                                while (localDataSource.data().length) {
+                                    localDataSource.remove(localDataSource.at(0));
+                                }
+
+                                var remoteData = remoteDataSource.data().toJSON();
+
+                                for (var i = 0; i < remoteData.length; i++) {
+                                    localDataSource.add(remoteData[i]);
+                                }
+
+                                localDataSource.sync();
+                            }
+
+                            if (pushed) {
+                                remoteDataSource.one("change", purgeLocal);
+
+                                remoteDataSource.sync();
+                            } else {
+                                purgeLocal();
+                            }
+                        });
+                    }
+                );
+            });
         },
         online: window.navigator.onLine,
         onlineClass: function() {
