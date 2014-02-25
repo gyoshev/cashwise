@@ -159,46 +159,48 @@ var cashwise = (function() {
                 everlive.Users.loginWithFacebook(
                     authToken,
                     function() {
-                        remoteDataSource.fetch(function() {
-                            var pushed = false;
-                            var localData = localDataSource.data().toJSON();
-
-                            for (var i = 0; i < localData.length; i++) {
-                                var item = localData[i];
-
-                                // unsynced item, remove pseudo-id and push to remote
-                                if (item.offline) {
-                                    pushed = true;
-                                    delete item.Id;
-                                    remoteDataSource.add(item);
-                                }
-                            }
-
-                            function purgeLocal() {
-                                while (localDataSource.data().length) {
-                                    localDataSource.remove(localDataSource.at(0));
-                                }
-
-                                var remoteData = remoteDataSource.data().toJSON();
-
-                                for (var i = 0; i < remoteData.length; i++) {
-                                    localDataSource.add(remoteData[i]);
-                                }
-
-                                localDataSource.sync();
-                            }
-
-                            if (pushed) {
-                                remoteDataSource.one("change", purgeLocal);
-
-                                remoteDataSource.sync();
-                            } else {
-                                purgeLocal();
-                            }
-                        });
+                        remoteDataSource.fetch($.proxy(cashwise._sync, cashwise));
                     }
                 );
             });
+        },
+        _sync: function() {
+            // sync local and remote database, WIP
+            var pushed = false;
+            var localData = localDataSource.data().toJSON();
+
+            for (var i = 0; i < localData.length; i++) {
+                var item = localData[i];
+
+                // unsynced item, remove pseudo-id and push to remote
+                if (item.offline) {
+                    pushed = true;
+                    delete item.Id;
+                    remoteDataSource.add(item);
+                }
+            }
+
+            function purgeLocal() {
+                while (localDataSource.data().length) {
+                    localDataSource.remove(localDataSource.at(0));
+                }
+
+                var remoteData = remoteDataSource.data().toJSON();
+
+                for (var i = 0; i < remoteData.length; i++) {
+                    localDataSource.add(remoteData[i]);
+                }
+
+                localDataSource.sync();
+            }
+
+            if (pushed) {
+                remoteDataSource.one("change", purgeLocal);
+
+                remoteDataSource.sync();
+            } else {
+                purgeLocal();
+            }
         },
         online: window.navigator.onLine,
         onlineClass: function() {
