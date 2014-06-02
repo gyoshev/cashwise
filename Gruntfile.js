@@ -6,13 +6,13 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
 
-    yeoman: {
+    cashwise: {
       app: 'app'
     },
 
     watch: {
       js: {
-        files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
+        files: ['<%= cashwise.app %>/scripts/{,*/}*.js'],
         tasks: ['jshint'],
         options: {
           livereload: true
@@ -23,9 +23,9 @@ module.exports = function (grunt) {
           livereload: '<%= connect.options.livereload %>'
         },
         files: [
-          '<%= yeoman.app %>/{,*/}*.html',
+          '<%= cashwise.app %>/{,*/}*.html',
           '.tmp/styles/{,*/}*.css',
-          '<%= yeoman.app %>/images/{,*/}*'
+          '<%= cashwise.app %>/images/{,*/}*'
         ]
       }
     },
@@ -42,7 +42,7 @@ module.exports = function (grunt) {
           open: true,
           base: [
             '.tmp',
-            '<%= yeoman.app %>'
+            '<%= cashwise.app %>'
           ]
         }
       }
@@ -55,8 +55,8 @@ module.exports = function (grunt) {
       },
       all: [
         'Gruntfile.js',
-        '<%= yeoman.app %>/scripts/{,*/}*.js',
-        '!<%= yeoman.app %>/scripts/vendor/*',
+        '<%= cashwise.app %>/scripts/{,*/}*.js',
+        '!<%= cashwise.app %>/scripts/vendor/*',
         'test/spec/{,*/}*.js'
       ]
     }
@@ -72,11 +72,6 @@ module.exports = function (grunt) {
       'connect:livereload',
       'watch'
     ]);
-  });
-
-  grunt.registerTask('server', function (target) {
-    grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-    grunt.task.run([target ? ('serve:' + target) : 'serve']);
   });
 
   grunt.registerTask('build', []);
